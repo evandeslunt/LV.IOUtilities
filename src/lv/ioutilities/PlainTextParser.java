@@ -34,21 +34,20 @@ public class PlainTextParser implements Parser{
     /**
      * Given a line of text and the line number, adds it to a Map with the key
      * corresponding to the line number.
-     * @param map - The Map to add the text into
      * @param text - The text to add
-     * @param lineNum - The line number of the text
-     * @return The given map, with the text and line number added as a key-value
+     * @return A map with the text and line number added as a key-value
      * pair.
      * @throws IllegalArgumentException if the lineNum is already a key in the
      * given map.
      */
     @Override
-    public final void parse(Map<String, String> map, String text){
+    public final void parse(Map<String,Map<String,String>> map, String text){
         if(text == null){
             throw new NullPointerException();
         }
-        
-        map.put(currLineNum.toString(), text);
+        Map<String,String> subMap = new HashMap<String,String>();
+        subMap.put(currLineNum.toString(), text);
+        map.put(currLineNum.toString(), subMap);
         currLineNum++;
         
     }
@@ -71,14 +70,13 @@ public class PlainTextParser implements Parser{
     //testing
     
     public static void main(String args[]){
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String,Map<String, String>> map = new HashMap<String,Map<String, String>>();
         Parser parser = new PlainTextParser();
         
         parser.parse(map, "This is the first line");
         parser.parse(map, "This is the second line");
         parser.parse(map, "This is the third line");
         
-                
         System.out.println(map);
     }
     

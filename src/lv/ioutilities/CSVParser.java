@@ -59,44 +59,49 @@ public class CSVParser implements Parser{
      * 
      * Another alternative is that we could have a Map<Map<String,String>>, so that
      * we get data like:
-     *   Key: Birth Year Value:
-     *                   "1", "2003"
-     *                   "2", "1993"
-     *   Key: Age Value:
-     *                  "1", "10"
-     *                  "2", "20"
-     * I don't like this either. Conceptually it may be a little cleaner, but
-     * then we have to go back to the interface and have it return a Map<Map<String,String>>
-     * which feels inelegant. We would also have to refactor the plain text reader code.
+     *   Key: "2003" Value:
+     *                   "2003", "10"
+     *   Key: "1993" Value:
+     *                  "1993", "20"
      * 
      * How would this look with XML?
-     * <Year id=2003>2003
+     * <Year id=y2003>2003
      *   <Age>10</age>
      * </Year>
-     * <Year id=1993>1993
+     * <Year id=y1993>1993
      *   <Age>20</Age>
      * </Year>
      * 
-     * So our map-map would be something like
-     *   Key: Year Value:
-     *          "2003", "2003"
-     *          "1993", "1993"
-     *   Key: Age Value:
-     *          "2003", "10"
-     *          "1993", "20"
+     * Key: "y2003" value:
+     *              "2003", "10"
+     * Key: "y1993" value;
+     *              "1993", "20"
      * 
-     * This is nice. But I'm just not sure I like it.
+     * This is nice. It's like creating a pseudo-table.
      * @param map
      * @param text 
      */
     @Override
-    public void parse(Map<String, String> map, String text) {
+    public final void parse(Map<String,Map<String,String>> map, String text) {
         if(text == null){
             throw new NullPointerException();
         }
+       // Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
         
+        //assume left-most parameter is the key.
+        String[] textParts = text.split(",");
+        map.put(textParts[0],parserHelper(textParts));
         
+    }
+    
+    
+    private Map<String,String> parserHelper(String[] text){
+        //assume we know somehow that item 1 is "birth year" and item 2 is "age"
+        Map<String,String> map = new HashMap<String,String>();
+        map.put(text[0],text[0]);
+        map.put(text[0],text[1]);
         
+        return map;
     }
     
     

@@ -42,20 +42,19 @@ public class TextReader implements FReader{
      * @throws IOException if there is an error reading the file.
      */
     @Override
-    public final Map read(String path) throws IOException{
+    public final Map<String,Map<String,String>> read(String path) throws IOException{
         if(path == null){
             throw new NullPointerException(NO_PATH_ERR);
         } else if (path.length() == 0){
             throw new IllegalArgumentException(NO_PATH_ERR);
         }
         
-        Map<String, String> map = new HashMap<String,String>();
+        Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
         File file = new File(path);
         BufferedReader in = null;
         try{
             in = new BufferedReader(new FileReader(file));
             String currLineText = in.readLine();
-            
             while(currLineText != null){
                 parser.parse(map, currLineText);
                 currLineText = in.readLine();
@@ -74,9 +73,10 @@ public class TextReader implements FReader{
     //TESTING
     
     public static void main(String args[]){
-        FReader reader = new TextReader();
-        String path = "src/testData.txt";
-        Map<String,String> lines = new HashMap<String,String>();
+        FReader reader = new TextReader(new CSVParser());
+        String path = "src/CSVTestData.txt";
+        //Map<String,String> lines = new HashMap<String,String>();
+        Map<String,Map<String,String>> lines = new TreeMap<String,Map<String,String>>();
         try{
             lines = reader.read(path);
     
@@ -86,7 +86,15 @@ public class TextReader implements FReader{
         
         Set<String> keys = lines.keySet();
         for(String key : keys){
-            System.out.println(key + " " + lines.get(key));
+           // System.out.println(key + " " + lines.get(key));
+            if(lines.get(key) instanceof Map){
+                Map<String,String> subMap = lines.get(key);
+                Set<String> subKeys = subMap.keySet();
+                for(String subKey : subKeys){
+                    System.out.println("\t" + subKey + " " + subMap.get(subKey));
+                }
+            }
+            
         }
     }
 }
