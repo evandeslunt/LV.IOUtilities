@@ -57,7 +57,7 @@ public class TextReader implements FReader{
             String currLineText = in.readLine();
             
             while(currLineText != null){
-                map = parser.parse(map, currLineText);
+                parser.parse(map, currLineText);
                 currLineText = in.readLine();
             }
         } catch(IOException e){
@@ -73,20 +73,20 @@ public class TextReader implements FReader{
     
     //TESTING
     
-//    public static void main(String args[]){
-//        FReader reader = new TextReader();
-//        String path = "src/testData.txt";
-//        Map<String,String> lines = new HashMap<String,String>();
-//        try{
-//            lines = reader.read(path);
-//    
-//        } catch (IOException e){
-//            System.out.println(e.getMessage());
-//        } 
-//        
-//        Set<String> keys = lines.keySet();
-//        for(String key : keys){
-//            System.out.println(key + " " + lines.get(key));
-//        }
-//    }
+    public static void main(String args[]){
+        FReader reader = new TextReader();
+        String path = "src/testData.txt";
+        Map<String,String> lines = new HashMap<String,String>();
+        try{
+            lines = reader.read(path);
+    
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        } 
+        
+        Set<String> keys = lines.keySet();
+        for(String key : keys){
+            System.out.println(key + " " + lines.get(key));
+        }
+    }
 }

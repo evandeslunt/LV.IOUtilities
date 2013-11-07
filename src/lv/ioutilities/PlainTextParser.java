@@ -10,8 +10,6 @@ import java.util.Set;
  * @author Liz Ife Van Deslunt
  */
 public class PlainTextParser implements Parser{
-    private static final String DUPLICATE_KEY_ERR = "The given line number has already"
-            + " been used as a key in this map.";
     public static final Integer INIT_LINE_NUM = 1;
     private static Integer currLineNum;
     private static Integer userSpecInitLineNum;
@@ -45,19 +43,14 @@ public class PlainTextParser implements Parser{
      * given map.
      */
     @Override
-    public final Map<String, String> parse(Map<String, String> map, String text){
+    public final void parse(Map<String, String> map, String text){
         if(text == null){
             throw new NullPointerException();
-        }
-        Set keys = map.keySet();
-        if(keys.contains(currLineNum)){
-            throw new IllegalArgumentException(DUPLICATE_KEY_ERR);
         }
         
         map.put(currLineNum.toString(), text);
         currLineNum++;
         
-        return map;
     }
     
     /**
@@ -81,9 +74,9 @@ public class PlainTextParser implements Parser{
         Map<String, String> map = new HashMap<String, String>();
         Parser parser = new PlainTextParser();
         
-        map = parser.parse(map, "This is the first line");
-        map = parser.parse(map, "This is the second line");
-        map = parser.parse(map, "This is the third line");
+        parser.parse(map, "This is the first line");
+        parser.parse(map, "This is the second line");
+        parser.parse(map, "This is the third line");
         
                 
         System.out.println(map);

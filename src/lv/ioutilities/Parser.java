@@ -9,6 +9,6 @@ import java.util.Map;
  */
 public interface Parser {
     
-    public Map<String, String> parse(Map<String, String> map, String text);
+    public void parse(Map<String, String> map, String text);
     
 }
