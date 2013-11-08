@@ -88,6 +88,8 @@ public class CSVParser implements Parser{
         }
        // Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
         
+        //first line is the column names
+        
         //assume left-most parameter is the key.
         String[] textParts = text.split(",");
         map.put(textParts[0],parserHelper(textParts));
@@ -102,6 +104,19 @@ public class CSVParser implements Parser{
         map.put(text[0],text[1]);
         
         return map;
+    }
+
+    @Override
+    public List<String> unparse(List<Map<String, String>> data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+    
+        //testing
+    
+    public static void main(String args[]){
+        
     }
     
     

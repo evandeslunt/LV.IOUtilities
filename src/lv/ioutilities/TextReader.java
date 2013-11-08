@@ -60,7 +60,7 @@ public class TextReader implements FReader{
                 currLineText = in.readLine();
             }
         } catch(IOException e){
-            throw new IOException();
+            throw e;
         } finally {
             if(in != null){
                 in.close();
@@ -89,6 +89,7 @@ public class TextReader implements FReader{
            // System.out.println(key + " " + lines.get(key));
             if(lines.get(key) instanceof Map){
                 Map<String,String> subMap = lines.get(key);
+                System.out.println(lines.get(key));
                 Set<String> subKeys = subMap.keySet();
                 for(String subKey : subKeys){
                     System.out.println("\t" + subKey + " " + subMap.get(subKey));

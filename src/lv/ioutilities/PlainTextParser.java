@@ -1,9 +1,7 @@
 
 package lv.ioutilities;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 
@@ -65,6 +63,43 @@ public class PlainTextParser implements Parser{
         }
     }
     
+    /**
+     * Extracts the values to be written to the file from the given map.
+     * @param data - The Map containing the data to write.
+     * @return a String
+     */
+    public final List<String> unparse(List<Map<String,String>> data){
+        if(data == null){
+            throw new NullPointerException();
+        }
+        List<String> toWrite = new ArrayList<String>();
+        for(int i = 0; i < data.size(); i++){
+            Map<String,String> map = data.get(i);
+            getValues(map, toWrite);
+        }
+        
+        
+        return toWrite;
+    }
+    
+    /**
+     * Puts the values from the Map into a the given list for processing.
+     * @param map
+     * @param toWrite 
+     */
+    private final void getValues(Map<String,String> map, List<String> toWrite){
+        if(map == null){
+            throw new NullPointerException();
+        }
+        Set<String> keys = map.keySet();
+        
+        for(String key : keys){
+            String currData = map.get(key);
+            if(currData != null){
+                toWrite.add(currData);
+            }
+        }
+    }
     
     
     //testing
@@ -73,11 +108,22 @@ public class PlainTextParser implements Parser{
         Map<String,Map<String, String>> map = new HashMap<String,Map<String, String>>();
         Parser parser = new PlainTextParser();
         
-        parser.parse(map, "This is the first line");
-        parser.parse(map, "This is the second line");
-        parser.parse(map, "This is the third line");
+//        parser.parse(map, "This is the first line");
+//        parser.parse(map, "This is the second line");
+//        parser.parse(map, "This is the third line");
+//        
+//        System.out.println(map);
         
-        System.out.println(map);
+        Map<String,String> data = new HashMap<String,String>();
+        data.put("1", "First Line.");
+        data.put("2", "Second LinE.");
+        data.put("3", "Third Line.");
+        
+        List<Map<String,String>> input = new ArrayList<>();
+        input.add(data);
+        List<String> result = new ArrayList<String>();
+        result = parser.unparse(input);
+        System.out.println(result);
     }
     
 }
