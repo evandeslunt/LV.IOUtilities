@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface Parser {
     
-    public void parse(Map<String,Map<String,String>> map, String text);
+    public Map<String,Map<String,String>> parse(List<String> data);
     
     public List<String> unparse(List<Map<String,String>> data);
     

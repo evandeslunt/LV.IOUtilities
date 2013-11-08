@@ -52,11 +52,13 @@ public class TextReader implements FReader{
         Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
         File file = new File(path);
         BufferedReader in = null;
+        List<String> data = new ArrayList<String>();
         try{
             in = new BufferedReader(new FileReader(file));
             String currLineText = in.readLine();
             while(currLineText != null){
-                parser.parse(map, currLineText);
+                //parser.parse(map, currLineText);
+                data.add(currLineText);
                 currLineText = in.readLine();
             }
         } catch(IOException e){
@@ -65,8 +67,8 @@ public class TextReader implements FReader{
             if(in != null){
                 in.close();
             }
-        }      
-        return map;
+        }   
+        return parser.parse(data);
     }
     
     
@@ -89,7 +91,7 @@ public class TextReader implements FReader{
            // System.out.println(key + " " + lines.get(key));
             if(lines.get(key) instanceof Map){
                 Map<String,String> subMap = lines.get(key);
-                System.out.println(lines.get(key));
+                System.out.println("KEY: " + key + " VALUE: ");
                 Set<String> subKeys = subMap.keySet();
                 for(String subKey : subKeys){
                     System.out.println("\t" + subKey + " " + subMap.get(subKey));

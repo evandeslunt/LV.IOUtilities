@@ -39,7 +39,7 @@ public class PlainTextParser implements Parser{
      * given map.
      */
     @Override
-    public final void parse(Map<String,Map<String,String>> map, String text){
+    public final void parse(Map<String,Map<String,String>> map, List<String> text){
         if(text == null){
             throw new NullPointerException();
         }
