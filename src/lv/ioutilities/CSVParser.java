@@ -19,7 +19,27 @@ public class CSVParser implements Parser{
             + "parse either does not contain an ID field, or is not properly "
             + "formatted.";
     private static final String SEPARATOR_CHAR = ",";
-    private static final int ID_INDEX = 0;
+    private static final Integer INIT_ID_NUM = 0;
+    
+    private static Integer currIDNum;
+    private static Integer USER_DEFINED_ID;
+    
+    /**
+     * Constructs a CSVParser with the default ID number, which is 0. (Matches
+     * the line number in the file being parsed).
+     */
+    public CSVParser(){
+        setCurrID(INIT_ID_NUM);
+    }
+    
+    /**
+     * Constructor that lets the user pass in a value for the initial ID number.
+     * @param initIDNum - The starting value for the ID number.
+     */
+    public CSVParser(int initIDNum){
+        setCurrID(initIDNum);
+        USER_DEFINED_ID = initIDNum;
+    }
     
     /**
      * Reads text from a CSV file. A CSV file is comma-separated values. For example
@@ -97,7 +117,7 @@ public class CSVParser implements Parser{
             return new HashMap<String,Map<String,String>>();
         }
         
-        Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
+        Map<String,Map<String,String>> map = new TreeMap<String,Map<String,String>>();
         
         //first line is the column names
         String[] columnHeads = null;
@@ -119,7 +139,8 @@ public class CSVParser implements Parser{
                 throw new IllegalArgumentException(BAD_CONTENT_FORMAT);
             }
             
-            map.put(textParts[ID_INDEX], parserHelper(columnHeads, textParts));
+            map.put(currIDNum.toString(), parserHelper(columnHeads, textParts));
+            currIDNum++;
         }
         
         return map;
@@ -131,7 +152,7 @@ public class CSVParser implements Parser{
             throw new NullPointerException();
         } 
         
-        Map<String,String> subMap = new HashMap<String,String>();
+        Map<String,String> subMap = new TreeMap<String,String>();
         
         for(int i = 0; i < text.length; i++){
             subMap.put(columnHeads[i], text[i]);
@@ -144,14 +165,28 @@ public class CSVParser implements Parser{
     public List<String> unparse(List<Map<String, String>> data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+       
+    private void setCurrID(int idNum){
+        currIDNum = idNum;
+    }
     
+    public final void resetIDNum(){
+        if(USER_DEFINED_ID != null){
+            currIDNum = USER_DEFINED_ID;
+        } else {
+            currIDNum = INIT_ID_NUM;
+        }
+    }
     
+   
     
         //testing
     
     public static void main(String args[]){
         
     }
+    
+
     
     
     

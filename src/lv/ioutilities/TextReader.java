@@ -20,7 +20,6 @@ public class TextReader implements FReader{
     
     public TextReader(Parser p){
         setParser(p);
-        
     }
     
     /**
@@ -49,7 +48,6 @@ public class TextReader implements FReader{
             throw new IllegalArgumentException(NO_PATH_ERR);
         }
         
-        Map<String,Map<String,String>> map = new HashMap<String,Map<String,String>>();
         File file = new File(path);
         BufferedReader in = null;
         List<String> data = new ArrayList<String>();
@@ -68,6 +66,7 @@ public class TextReader implements FReader{
                 in.close();
             }
         }   
+        
         return parser.parse(data);
     }
     
@@ -75,9 +74,8 @@ public class TextReader implements FReader{
     //TESTING
     
     public static void main(String args[]){
-        FReader reader = new TextReader(new CSVParser());
-        String path = "src/CSVTestData.txt";
-        //Map<String,String> lines = new HashMap<String,String>();
+        FReader reader = new TextReader(new PlainTextParser());
+        String path = "src/testData.txt";
         Map<String,Map<String,String>> lines = new TreeMap<String,Map<String,String>>();
         try{
             lines = reader.read(path);

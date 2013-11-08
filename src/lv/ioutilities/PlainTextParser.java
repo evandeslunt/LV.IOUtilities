@@ -39,15 +39,21 @@ public class PlainTextParser implements Parser{
      * given map.
      */
     @Override
-    public final void parse(Map<String,Map<String,String>> map, List<String> text){
-        if(text == null){
+    public Map<String,Map<String,String>> parse(List<String> data){
+        if(data == null){
             throw new NullPointerException();
         }
-        Map<String,String> subMap = new HashMap<String,String>();
-        subMap.put(currLineNum.toString(), text);
-        map.put(currLineNum.toString(), subMap);
-        currLineNum++;
         
+        Map<String,Map<String,String>> map = new TreeMap<>();
+        
+        for(int i = 0; i < data.size(); i++){
+            Map<String,String> subMap = new TreeMap<>();
+            subMap.put(currLineNum.toString(), data.get(i));
+            map.put(currLineNum.toString(), subMap);
+            currLineNum++;
+        }
+        
+        return map;
     }
     
     /**
@@ -100,6 +106,12 @@ public class PlainTextParser implements Parser{
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "PlainTextParser";
+    }
+    
     
     
     //testing
