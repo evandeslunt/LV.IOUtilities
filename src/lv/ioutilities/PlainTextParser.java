@@ -4,7 +4,8 @@ package lv.ioutilities;
 import java.util.*;
 
 /**
- * 
+ * The simplest possible parser -- handles files that have one piece of data
+ * per line.
  * @author Liz Ife Van Deslunt
  */
 public class PlainTextParser implements Parser{
@@ -71,32 +72,36 @@ public class PlainTextParser implements Parser{
     
     /**
      * Extracts the values to be written to the file from the given map.
-     * @param data - The Map containing the data to write.
-     * @return a String
+     * @param data - The Map containing the data to write. (NOTE: it is 
+     * recommended to use a TreeMap so that the data retains its original
+     * order when put into a list.
+     * @return List<String> containing the values as Strings. Each item in
+     * the List represents one line of text.
      */
-    public final List<String> unparse(List<Map<String,String>> data){
+    @Override
+    public final List<String> formatData(List<Map<String,String>> data){
         if(data == null){
             throw new NullPointerException();
         }
         List<String> toWrite = new ArrayList<String>();
         for(int i = 0; i < data.size(); i++){
             Map<String,String> map = data.get(i);
-            getValues(map, toWrite);
+            toWrite = getLine(map);
         }
-        
         
         return toWrite;
     }
     
     /**
      * Puts the values from the Map into a the given list for processing.
-     * @param map
-     * @param toWrite 
+     * @param map - The map containing values to be written.
+     * @return List whose contents are each line that should appear in the file.
      */
-    private final void getValues(Map<String,String> map, List<String> toWrite){
+    private List<String> getLine(Map<String,String> map){
         if(map == null){
             throw new NullPointerException();
         }
+        List<String> toWrite = new ArrayList<String>();
         Set<String> keys = map.keySet();
         
         for(String key : keys){
@@ -105,37 +110,35 @@ public class PlainTextParser implements Parser{
                 toWrite.add(currData);
             }
         }
+        return toWrite;
     }
 
-    @Override
-    public String toString() {
-        return "PlainTextParser";
-    }
+   
     
     
     
     //testing
     
-    public static void main(String args[]){
-        Map<String,Map<String, String>> map = new HashMap<String,Map<String, String>>();
-        Parser parser = new PlainTextParser();
-        
-//        parser.parse(map, "This is the first line");
-//        parser.parse(map, "This is the second line");
-//        parser.parse(map, "This is the third line");
+//    public static void main(String args[]){
+//        Map<String,Map<String, String>> map = new HashMap<String,Map<String, String>>();
+//        Parser parser = new PlainTextParser();
 //        
-//        System.out.println(map);
-        
-        Map<String,String> data = new HashMap<String,String>();
-        data.put("1", "First Line.");
-        data.put("2", "Second LinE.");
-        data.put("3", "Third Line.");
-        
-        List<Map<String,String>> input = new ArrayList<>();
-        input.add(data);
-        List<String> result = new ArrayList<String>();
-        result = parser.unparse(input);
-        System.out.println(result);
-    }
+////        parser.parse(map, "This is the first line");
+////        parser.parse(map, "This is the second line");
+////        parser.parse(map, "This is the third line");
+////        
+////        System.out.println(map);
+//        
+//        Map<String,String> data = new HashMap<String,String>();
+//        data.put("1", "First Line.");
+//        data.put("2", "Second LinE.");
+//        data.put("3", "Third Line.");
+//        
+//        List<Map<String,String>> input = new ArrayList<>();
+//        input.add(data);
+//        List<String> result = new ArrayList<String>();
+//        result = parser.unparse(input);
+//        System.out.println(result);
+//    }
     
 }
