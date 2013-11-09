@@ -4,8 +4,14 @@
  */
 package lv.ioutilities;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
- *
+ * Service class that allows the caller to read, write, and copy files.
  * @author Liz Ife Van Deslunt
  */
 public class FileService {
@@ -57,5 +63,77 @@ public class FileService {
         }
     }
     
-    public final read
+    /**
+     * Reads a file at the given path and returns the contents as a Map.
+     * @param path - The file path of the file.
+     * @return A Map containing the contents of the file.
+     * @throws IOException if there is an error reading the file.
+     * @throws NullPointerException if the path is null.
+     * @throws IllegalArgumentException if the path is an empty String.
+     */
+     public final Map read(String path) throws IOException{
+         ValidationUtilities.validateFilePath(path);
+         return reader.read(path);
+     }
+     
+    /**
+     * Writes the given data into the specified file.
+     * 
+     * @param path - The path of the file to write to.
+     * @param data - The data to add to the file. Each item of the list
+     * should correspond to one line in the file. 
+     * @param append - Whether the contents of the file should be 
+     * overwritten (false), or appended to (true)
+     * @throws IOException if there is a problem writing to the file.
+     * @throws NullPointerException if <code>path</code> or <code>data<code> is null.
+     * @throws IllegalArgumentException if the path is an empty String.
+     */
+     public final void write(String path, List<Map<String,String>> data, boolean append) throws IOException{
+         ValidationUtilities.validateFilePath(path);
+         ValidationUtilities.validateObject(data);
+         
+         writer.write(path, data, append);
+     }
+     
+     /**
+      * Copies the file at the original path location to a file at the new path
+      * location. If there is already a file at the new path, overwrites that file.
+      * @param originalPath - The path of the original file to be copied.
+      * @param newPath - The path of the new file to be created or overwritten.
+      * @throws IOException if there is a problem reading or writing the files.
+      * @throws NullPointerException if either path is null.
+      * @throws IllegalArgumentException if either path is an empty String.
+      */
+     public final void copy(String originalPath, String newPath) throws IOException{
+        ValidationUtilities.validateFilePath(originalPath);
+        ValidationUtilities.validateFilePath(newPath);
+        
+         writer.write(newPath, getDataToWrite(originalPath), false);
+     }
+     
+     /**
+      * Gets data from the file and puts it into the proper format for the
+      * writer.
+      * @param originalPath - The path containing the file to copy.
+      * @return
+      * @throws IOException if there is a problem reading the file.
+      * @throws NullPointerException if the path is null.
+      * @throws IllegalArgumentException if the path is an empty String.
+      */
+     private List<Map<String,String>> getDataToWrite(String originalPath) throws IOException{
+         ValidationUtilities.validateFilePath(originalPath);
+     
+         List<Map<String,String>> toWrite = new ArrayList<Map<String,String>>();
+         Map<String,Map<String,String>> data = reader.read(originalPath);
+         Set<String> keys = data.keySet();
+         
+         for(String key : keys){
+             toWrite.add(data.get(key));
+         }
+         
+         return toWrite;
+     }
+     
+    
+     
 }

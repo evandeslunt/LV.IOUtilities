@@ -10,6 +10,12 @@ import java.util.Map;
  */
 public interface FReader {
     
-    public Map read(String path) throws IOException;
+    /**
+     * Reads a file at the given path and returns the contents as a Map.
+     * @param path - The file path of the file.
+     * @return A Map containing the contents of the file.
+     * @throws IOException if there is an error reading the file.
+     */
+    public Map<String,Map<String,String>> read(String path) throws IOException;
     
 }
