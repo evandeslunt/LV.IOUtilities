@@ -2,6 +2,7 @@
 package lv.ioutilities;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,6 @@ public interface FWriter {
      * overwritten (false), or appended to (true)
      * @throws IOException 
      */
-    public void write(String path, List<Map<String,String>> data, boolean append) throws IOException;
+    public void write(Path path, List<Map<String,String>> data, boolean append) throws IOException;
     
 }

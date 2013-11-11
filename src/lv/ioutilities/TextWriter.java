@@ -3,6 +3,8 @@ package lv.ioutilities;
 
 import java.util.*;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * This class writes text to text files.
@@ -10,7 +12,6 @@ import java.io.*;
  */
 public class TextWriter implements FWriter{
     private static String PARSER_ERR = "Please provide a valid Parser.";
-    private static String NO_PATH_ERR = "File path must not be null or empty.";
     private Parser parser;
     
     
@@ -29,9 +30,7 @@ public class TextWriter implements FWriter{
      * @throws NullPointerException if p is null.
      */
     public final void setParser(Parser p){
-        if(p == null){
-            throw new NullPointerException(PARSER_ERR);
-        }
+        ValidationUtilities.validateFilePath(PARSER_ERR);
         parser = p;
     }
     
@@ -46,16 +45,13 @@ public class TextWriter implements FWriter{
      * @throws IOException if there is a problem accessing or writing the file.
      */
     @Override
-    public final void write(String path, List<Map<String,String>> data, boolean append) throws IOException{
-        if(path == null || path.length() == 0){
-            throw new NullPointerException(NO_PATH_ERR);
-        }
-        
-        File file = new File(path);
+    public final void write(Path path, List<Map<String,String>> data, boolean append) throws IOException{
+        ValidationUtilities.validateFilePath(path);
         BufferedWriter out = null;
+        
         try{
             List<String> toWrite = parser.formatData(data);
-            out = new BufferedWriter(new FileWriter(file, append));
+            out = new BufferedWriter(new FileWriter(path.toFile(), append));
             for(int i = 0; i < toWrite.size(); i++){
                 out.append("\n" + toWrite.get(i));
             }
@@ -71,35 +67,37 @@ public class TextWriter implements FWriter{
     
     //testing
     
-    public static void main(String[] args){
-        FWriter writer = new TextWriter(new CSVParser());
-//        Map<String,String> data = new TreeMap<String,String>();
-//        data.put("1", "Who would then deny that when I am sipping tea in my tearoom");
-//        data.put("2", "I am swallowing the whole universe with it");
-//        data.put("3", "and that this very moment of my lifting the bowl to my lips");
-//        data.put("4", "is eternity itself transcending time and space?");
-//        List<Map<String,String>> toWrite = new ArrayList<Map<String,String>>();
-//        toWrite.add(data);
-        
-        Map<String,String> line1 = new TreeMap<>();
-        line1.put("year","1973");
-        line1.put("age", "40");
-        line1.put("shortyr", "73");
-        
-        Map<String,String> line2 = new TreeMap<>();
-        line2.put("year","1963");
-        line2.put("age","50");
-        line2.put("shortyr","63");
-        
-        List<Map<String,String>> toWrite = new ArrayList<>();
-        toWrite.add(line1);
-        toWrite.add(line2);
-        
-        
-        try{
-           writer.write("src/CSVTestData.txt", toWrite, true);
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-    }
+//    public static void main(String[] args){
+//        FWriter writer = new TextWriter(new CSVParser());
+////        Map<String,String> data = new TreeMap<String,String>();
+////        data.put("1", "Who would then deny that when I am sipping tea in my tearoom");
+////        data.put("2", "I am swallowing the whole universe with it");
+////        data.put("3", "and that this very moment of my lifting the bowl to my lips");
+////        data.put("4", "is eternity itself transcending time and space?");
+////        List<Map<String,String>> toWrite = new ArrayList<Map<String,String>>();
+////        toWrite.add(data);
+//        
+//        Map<String,String> line1 = new TreeMap<>();
+//        line1.put("year","1973");
+//        line1.put("age", "40");
+//        line1.put("shortyr", "73");
+//        
+//        Map<String,String> line2 = new TreeMap<>();
+//        line2.put("year","1963");
+//        line2.put("age","50");
+//        line2.put("shortyr","63");
+//        
+//        List<Map<String,String>> toWrite = new ArrayList<>();
+//        toWrite.add(line1);
+//        toWrite.add(line2);
+//        
+//        Path path = Paths.get("src/CSVTestData.txt");
+//        
+//        try{
+//            
+//           writer.write(path, toWrite, true);
+//        } catch (IOException e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
 }

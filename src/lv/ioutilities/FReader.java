@@ -2,6 +2,7 @@
 package lv.ioutilities;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -16,6 +17,6 @@ public interface FReader {
      * @return A Map containing the contents of the file.
      * @throws IOException if there is an error reading the file.
      */
-    public Map<String,Map<String,String>> read(String path) throws IOException;
+    public Map<String,Map<String,String>> read(Path path) throws IOException;
     
 }
