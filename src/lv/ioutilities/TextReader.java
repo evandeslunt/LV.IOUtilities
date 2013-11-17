@@ -14,9 +14,9 @@ public class TextReader implements FReader{
     private static String PARSER_ERR = "Please provide a valid Parser.";
     private Parser parser;
     
-    public TextReader(){
-        //set parser with default value by using a factory that reads from a config file
-        setParser(new PlainTextParser()); //this will be changed
+    public TextReader() throws IOException, 
+            InstantiationException, IllegalAccessException, ClassNotFoundException {
+        parser = ExternalSpecFactory.getParser();
     }
     
     public TextReader(Parser p){
@@ -48,6 +48,7 @@ public class TextReader implements FReader{
         try {
             in = new BufferedReader(new FileReader(path.toFile()));
             String currLineText = in.readLine();
+            Map map = parser.parse(currLineText);
             
             while(currLineText != null){
                 data.add(currLineText);
@@ -64,33 +65,40 @@ public class TextReader implements FReader{
         
         return parser.parse(data);
     }
+
+    @Override
+    public String toString() {
+        return "TextReader";
+    }
+    
+    
     
     
     //TESTING
     
-    public static void main(String args[]){
-        FReader reader = new TextReader(new PlainTextParser());
-        String path = "src/testData.txt";
-        Map<String,Map<String,String>> lines = new TreeMap<String,Map<String,String>>();
-        try{
-            lines = reader.read(Paths.get(path));
-    
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        } 
-        
-        Set<String> keys = lines.keySet();
-        for(String key : keys){
-           // System.out.println(key + " " + lines.get(key));
-            if(lines.get(key) instanceof Map){
-                Map<String,String> subMap = lines.get(key);
-                System.out.println("KEY: " + key + " VALUE: ");
-                Set<String> subKeys = subMap.keySet();
-                for(String subKey : subKeys){
-                    System.out.println("\t" + subKey + " " + subMap.get(subKey));
-                }
-            }
-            
-        }
+    public static void main(String args[]) throws Exception{
+        FReader reader = new TextReader();
+//        String path = "src/testData.txt";
+//        Map<String,Map<String,String>> lines = new TreeMap<String,Map<String,String>>();
+//        try{
+//            lines = reader.read(Paths.get(path));
+//    
+//        } catch (IOException e){
+//            System.out.println(e.getMessage());
+//        } 
+//        
+//        Set<String> keys = lines.keySet();
+//        for(String key : keys){
+//           // System.out.println(key + " " + lines.get(key));
+//            if(lines.get(key) instanceof Map){
+//                Map<String,String> subMap = lines.get(key);
+//                System.out.println("KEY: " + key + " VALUE: ");
+//                Set<String> subKeys = subMap.keySet();
+//                for(String subKey : subKeys){
+//                    System.out.println("\t" + subKey + " " + subMap.get(subKey));
+//                }
+//            }
+//            
+//        }
     }
 }

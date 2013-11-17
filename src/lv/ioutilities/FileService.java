@@ -32,10 +32,11 @@ public class FileService {
     /**
      * Default constructor which provides a default file reader and file writer.
      */
-    public FileService(){
+    public FileService() throws Exception {
         //TODO: read this from config file.
-        writer = new TextWriter();
-        reader = new TextReader();
+        writer = ExternalSpecFactory.getWriter();
+        reader = ExternalSpecFactory.getReader();
+        System.out.println(" my reader is " + reader.toString( ) + " my writer is " + writer.toString());
     }
     
     /**
@@ -154,7 +155,12 @@ public class FileService {
      }
      
 
-     
+     public static void main(String args[]) throws Exception{
+         
+         FileService fs = new FileService();
+         
+         
+     }
    
      
     

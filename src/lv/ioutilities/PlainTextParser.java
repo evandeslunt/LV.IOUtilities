@@ -40,12 +40,9 @@ public class PlainTextParser implements Parser{
      * given map.
      */
     @Override
-    public Map<String,Map<String,String>> parse(List<String> data){
-        if(data == null){
-            throw new NullPointerException();
-        }
-        
-        Map<String,Map<String,String>> map = new TreeMap<>();
+    public Map<String,String> parse(String data){
+        Map<String,String> map = new LinkedHashMap<>();
+        map.put(,data);
         
         for(int i = 0; i < data.size(); i++){
             Map<String,String> subMap = new TreeMap<>();
@@ -119,26 +116,26 @@ public class PlainTextParser implements Parser{
     
     //testing
     
-//    public static void main(String args[]){
-//        Map<String,Map<String, String>> map = new HashMap<String,Map<String, String>>();
-//        Parser parser = new PlainTextParser();
+    public static void main(String args[]){
+        Map<String,Map<String, String>> map = new HashMap<String,Map<String, String>>();
+        Parser parser = new PlainTextParser();
+        
+//        parser.parse(map, "This is the first line");
+//        parser.parse(map, "This is the second line");
+//        parser.parse(map, "This is the third line");
 //        
-////        parser.parse(map, "This is the first line");
-////        parser.parse(map, "This is the second line");
-////        parser.parse(map, "This is the third line");
-////        
-////        System.out.println(map);
-//        
-//        Map<String,String> data = new HashMap<String,String>();
-//        data.put("1", "First Line.");
-//        data.put("2", "Second LinE.");
-//        data.put("3", "Third Line.");
-//        
-//        List<Map<String,String>> input = new ArrayList<>();
-//        input.add(data);
-//        List<String> result = new ArrayList<String>();
-//        result = parser.unparse(input);
-//        System.out.println(result);
-//    }
+//        System.out.println(map);
+        
+        Map<String,String> data = new HashMap<String,String>();
+        data.put("1", "First Line.");
+        data.put("2", "Second LinE.");
+        data.put("3", "Third Line.");
+        
+        List<Map<String,String>> input = new ArrayList<>();
+        input.add(data);
+        List<String> result = new ArrayList<String>();
+        result = parser.formatData(input);
+        System.out.println(result);
+    }
     
 }

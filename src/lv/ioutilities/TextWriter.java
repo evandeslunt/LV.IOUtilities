@@ -12,14 +12,27 @@ import java.nio.file.Paths;
  */
 public class TextWriter implements FWriter{
     private static String PARSER_ERR = "Please provide a valid Parser.";
+    private static String NEW_LINE = "\n";
     private Parser parser;
     
-    
-    public TextWriter(){
-       //set parser with default value by using a factory that reads from a config file
-        setParser(new PlainTextParser()); //this will be changed
+    /**
+     * Default constructor, which provides a default parser based on the 
+     * properties in the configuration file.
+     * @throws IOException if there is a problem reading the config file.
+     * @throws InstantiationException if there is a problem instantiating the Parser.
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException if there is no class corresponding to the
+     * default Parser.
+     */
+    public TextWriter() 
+            throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+       parser = ExternalSpecFactory.getParser();
     }
     
+    /**
+     * Constructor that allows the caller to pass in a parser.
+     * @param p The Parser to use
+     */
     public TextWriter(Parser p){
         setParser(p);
     }
@@ -35,7 +48,8 @@ public class TextWriter implements FWriter{
     }
     
     /**
-     * Writes the given data into the specified file.
+     * Writes the given data into the specified file, using the rules from the
+     * Parser to translate the data.
      * 
      * @param path - The path of the file to write to.
      * @param data - The data to add to the file. Each item of the list
@@ -53,7 +67,7 @@ public class TextWriter implements FWriter{
             List<String> toWrite = parser.formatData(data);
             out = new BufferedWriter(new FileWriter(path.toFile(), append));
             for(int i = 0; i < toWrite.size(); i++){
-                out.append("\n" + toWrite.get(i));
+                out.append(NEW_LINE + toWrite.get(i));
             }
         } catch(IOException e){
             throw e;
@@ -63,6 +77,7 @@ public class TextWriter implements FWriter{
             }
         }
     }
+    
     
     
     //testing
