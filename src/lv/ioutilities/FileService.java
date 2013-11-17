@@ -77,7 +77,7 @@ public class FileService {
      * @throws NullPointerException if the path is null.
      * @throws IllegalArgumentException if the path is an empty String.
      */
-     public final Map read(Path path) throws IOException{
+     public final List<Map> read(Path path) throws IOException{
          ValidationUtilities.validateFilePath(path);
          return reader.read(path);
      }
@@ -86,15 +86,14 @@ public class FileService {
      * Writes the given data into the specified file.
      * 
      * @param path - The path of the file to write to.
-     * @param data - The data to add to the file. Each item of the list
-     * should correspond to one line in the file. 
+     * @param data - The data to add to the file. 
      * @param append - Whether the contents of the file should be 
      * overwritten (false), or appended to (true)
      * @throws IOException if there is a problem writing to the file.
      * @throws NullPointerException if <code>path</code> or <code>data<code> is null.
      * @throws IllegalArgumentException if the path is an empty String.
      */
-     public final void write(Path path, List<Map<String,String>> data, boolean append) throws IOException{
+     public final void write(Path path, Map<String,String> data, boolean append) throws IOException{
          ValidationUtilities.validateFilePath(path);
          ValidationUtilities.validateObject(data, NULL_DATA);
          writer.write(path, data, append);

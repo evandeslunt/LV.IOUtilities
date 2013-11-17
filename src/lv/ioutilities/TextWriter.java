@@ -4,15 +4,14 @@ package lv.ioutilities;
 import java.util.*;
 import java.io.*;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * This class writes text to text files.
  * @author Liz Ife Van Deslunt
  */
 public class TextWriter implements FWriter{
-    private static String PARSER_ERR = "Please provide a valid Parser.";
-    private static String NEW_LINE = "\n";
+    private static final String PARSER_ERR = "Please provide a valid Parser.";
+    private static final String NEW_LINE = "\n";
     private Parser parser;
     
     /**
@@ -59,16 +58,14 @@ public class TextWriter implements FWriter{
      * @throws IOException if there is a problem accessing or writing the file.
      */
     @Override
-    public final void write(Path path, List<Map<String,String>> data, boolean append) throws IOException{
+    public final void write(Path path, Map<String,String> data, boolean append) throws IOException{
         ValidationUtilities.validateFilePath(path);
         BufferedWriter out = null;
         
         try{
-            List<String> toWrite = parser.formatData(data);
+            String toWrite = parser.extractData(data);
             out = new BufferedWriter(new FileWriter(path.toFile(), append));
-            for(int i = 0; i < toWrite.size(); i++){
-                out.append(NEW_LINE + toWrite.get(i));
-            }
+            out.append(NEW_LINE + toWrite);
         } catch(IOException e){
             throw e;
         } finally {
@@ -82,37 +79,23 @@ public class TextWriter implements FWriter{
     
     //testing
     
-//    public static void main(String[] args){
+//    public static void main(String[] args) throws Exception{
 //        FWriter writer = new TextWriter(new CSVParser());
-////        Map<String,String> data = new TreeMap<String,String>();
-////        data.put("1", "Who would then deny that when I am sipping tea in my tearoom");
-////        data.put("2", "I am swallowing the whole universe with it");
-////        data.put("3", "and that this very moment of my lifting the bowl to my lips");
-////        data.put("4", "is eternity itself transcending time and space?");
-////        List<Map<String,String>> toWrite = new ArrayList<Map<String,String>>();
-////        toWrite.add(data);
-//        
-//        Map<String,String> line1 = new TreeMap<>();
-//        line1.put("year","1973");
-//        line1.put("age", "40");
-//        line1.put("shortyr", "73");
-//        
-//        Map<String,String> line2 = new TreeMap<>();
-//        line2.put("year","1963");
-//        line2.put("age","50");
-//        line2.put("shortyr","63");
-//        
-//        List<Map<String,String>> toWrite = new ArrayList<>();
-//        toWrite.add(line1);
-//        toWrite.add(line2);
-//        
 //        Path path = Paths.get("src/CSVTestData.txt");
+//        Map<String,String> map = new LinkedHashMap<String,String>();
+//        map.put("1", "1900");
+//        map.put("2", "113");
+//        map.put("3", "00");
 //        
-//        try{
-//            
-//           writer.write(path, toWrite, true);
-//        } catch (IOException e){
-//            System.out.println(e.getMessage());
-//        }
+//        Map<String,String> map2 = new LinkedHashMap<String,String>();
+//        map2.put("1", "1903");
+//        map2.put("2", "110");
+//        map2.put("3", "03");
+//        
+//        writer.write(path, map, true);
+//        writer.write(path, map2, true);
+//        
+//        
+//        
 //    }
 }

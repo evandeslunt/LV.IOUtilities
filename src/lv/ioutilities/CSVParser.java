@@ -1,197 +1,99 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
+
 package lv.ioutilities;
 
-import java.util.*;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * A Parser that handles CSV Files with a header row.
  * @author Liz Ife Van Deslunt
  */
 public class CSVParser implements Parser{
-    private static final String BAD_HEAD_FORMAT = "The CSV file you are trying to "
-            + "parse does not contain a header row.";
-    private static final String BAD_CONTENT_FORMAT = "The CSV file you are trying"
-            + " to parse is not properly formatted.";
-    private static final String ID_OUT_OF_BOUNDS = "The line you are trying to "
-            + "parse either does not contain an ID field, or is not properly "
-            + "formatted.";
-    private static final String SEPARATOR_CHAR = ",";
-    private static final Integer INIT_ID_NUM = 0;
+    private static final String FORMAT_ERR = "The text is not formatted as a CSV"
+            + " and cannot be parsed.";
+    private String delimiter = ",";
     
-    private static Integer currIDNum;
-    private static Integer USER_DEFINED_ID;
     
     /**
-     * Constructs a CSVParser with the default ID number, which is 0. (Matches
-     * the line number in the file being parsed).
+     * Default constructor, which initializes the delimiter to a comma (",").
      */
     public CSVParser(){
-        setCurrID(INIT_ID_NUM);
+        
     }
-    
+
     /**
-     * Constructor that lets the user pass in a value for the initial ID number.
-     * @param initIDNum - The starting value for the ID number.
+     * Constructor that allows the caller to specify a delimiter.
+     * @param delimiter The character that marks the division between columns
+     * in the file.
      */
-    public CSVParser(int initIDNum){
-        setCurrID(initIDNum);
-        USER_DEFINED_ID = initIDNum;
+    public CSVParser(String delimiter){
+        ValidationUtilities.validateString(delimiter);
+        this.delimiter = delimiter;
     }
-    
     /**
-     * Parses data from a CSV file using the first column as a header row, and
-     * returns the data in a Map (see @return for more information).
-     * @param data - A List whose contents are lines of text from the file.
-     * @return A Map containing the data in the following format:
-     * key: unique ID (row number or user specified ID)
-     * value: a map containing the header columns as keys, and the row's data
-     * as values. 
+     * Returns a map containing the CSV's columns as values and their zero-based
+     * column number as the key.
+     * @param text A line of a CSV file to parse.
+     * @return A map containing the CSV's columns as values and their zero-based
+     * column number as the key.
      */
     @Override
-    public Map<String, Map<String, String>> parse(List<String> data)  {
-        if(data == null){
-            throw new NullPointerException();
-        } else if (data.size() == 0){
-            return new TreeMap<String,Map<String,String>>();
-        }
-        
-        Map<String,Map<String,String>> map = new TreeMap<String,Map<String,String>>();
-        
-        //first line is the column names
-        String[] columnHeads = null;
-        String columnHeadText = data.get(0);
-        if(columnHeadText == null){
-            throw new IllegalArgumentException(BAD_HEAD_FORMAT);
-        } else {
-            columnHeads = columnHeadText.split(SEPARATOR_CHAR);
-        }
-        for(int i = 1; i < data.size(); i++){
-            //assume left-most parameter is an ID for the record.
-            String currLine = data.get(i);
-            if(currLine == null){
-                throw new NullPointerException();
-            } 
-            
-            String[] textParts = currLine.split(SEPARATOR_CHAR);
-            if(textParts.length != columnHeads.length){
-                throw new IllegalArgumentException(BAD_CONTENT_FORMAT);
-            }
-            
-            map.put(currIDNum.toString(), parserHelper(columnHeads, textParts));
-            currIDNum++;
+    public final Map<String, String> parse(String text) {
+        if(ValidationUtilities.validateDelimitedText(text, delimiter) == false){
+            throw new IllegalArgumentException(FORMAT_ERR);
+        } 
+        Map<String,String> map = new LinkedHashMap<String,String>();
+        String[] columns = text.split(delimiter);
+        for(Integer i = 0; i < columns.length; i++){
+            map.put(i.toString(), columns[i]);
         }
         
         return map;
     }
-    
-    /**
-     * Matches a line of data with the appropriate headers.
-     * @param columnHeads - The header values to use.
-     * @param text - The line of data to match.
-     * @return A Map with <code>columnHeads</code> as the keys and <code>text
-     * </code> as the values.
-     */
-    private Map<String,String> parserHelper(String[] columnHeads, String[] text){
-        if(text == null || columnHeads == null){
-            throw new NullPointerException();
-        } else if (text.length != columnHeads.length){
-            throw new IllegalArgumentException(BAD_CONTENT_FORMAT);
-        }
-        
-        Map<String,String> subMap = new TreeMap<String,String>();
-        
-        for(int i = 0; i < text.length; i++){
-            subMap.put(columnHeads[i], text[i]);
-        }
-        
-        return subMap;
-    }
 
     /**
-     * Formats the data into a comma-separated String appropriate for a CSV 
-     * file. 
-     * NOTE: this method does not check that the data is appropriate for the 
-     * CSV file (i.e., does not check that the correct number of arguments are
-     * used, and does not check that the keys match the CSV's header row). It
-     * simply formats the data.
-     * 
-     * @param data - A list containing a map of the data to be written, with the
-     * map containing column headers as the key and the value to be written into
-     * the column as a value.
-     * @return A List containing the data's values as comma-separated Strings.
+     * Converts text data in the map into a String representation.
+     * @param data A Map whose values will be converted into a String. Note: to
+     * ensure columns are extracted in the desired order, it is recommended
+     * to use a LinkedHashMap.
+     * @return A String representation of the map's information.
      */
     @Override
-    public List<String> formatData(List<Map<String, String>> data) {
-        if(data == null){
-            throw new NullPointerException();
-        }
-        List<String> lines = new ArrayList<String>();
-        for(int i = 0; i < data.size(); i++){
-            Map<String,String> map = data.get(i);
-            Set<String> keys = map.keySet();
-            String lineData = "";
-            for(String key : keys){
-                lineData += map.get(key) + SEPARATOR_CHAR;
-            }
-            lines.add(lineData);
+    public final String extractData(Map<String, String> data) {
+        ValidationUtilities.validateObject(data);
+        
+        String result = "";
+        for(String k : data.keySet()){
+            result += data.get(k) + delimiter;
         }
         
-        return lines;
+        return result;
     }
-     
-    /**
-     * Sets the currIDNum to the given value.
-     * @param idNum The value to set the currIDNum to.
-     */
-    private void setCurrID(int idNum){
-        currIDNum = idNum;
-    }
-    
-     /**
-     * Resets the current line number to the initial line number. If the caller
-     * specified a starting line number, that value is used. Otherwise, the 
-     * default value is used.
-     */
-    public final void resetIDNum(){
-        if(USER_DEFINED_ID != null){
-            currIDNum = USER_DEFINED_ID;
-        } else {
-            currIDNum = INIT_ID_NUM;
-        }
-    }
-    
-   
-    
-        //testing
-    
-//    public static void main(String args[]){
-//        Map<String,String> line1 = new TreeMap<>();
-//        line1.put("year","1973");
-//        line1.put("age", "40");
-//        line1.put("shortyr", "73");
+
+
+//    public static void main(String[] args){
 //        
-//        Map<String,String> line2 = new TreeMap<>();
-//        line2.put("year","1963");
-//        line2.put("age","50");
-//        line2.put("shortyr","63");
+//        Map<String,String> data = new LinkedHashMap<String,String>();
+//        data.put("1", "Name");
+//        data.put("2", "Age");
+//        data.put("3", "Birthday");
 //        
-//        List<Map<String,String>> list = new ArrayList<>();
-//        list.add(line1);
-//        list.add(line2);
+//        Map<String,String> data1 = new LinkedHashMap<String,String>();
+//        data1.put("1", "Ife");
+//        data1.put("2", "24");
+//        data1.put("3", "10/04/1989");
 //        
-//        Parser parser = new CSVParser();
-//        List<String> result = parser.formatData(list);
-//        for(String str : result){
-//            System.out.println(str);
-//        }
+//        Map<String,String> data2 = new LinkedHashMap<String,String>();
+//        data2.put("1", "Gary");
+//        data2.put("2", "32");
+//        data2.put("3", "05/11/1981");
+//        
+//        Parser p = new CSVParser();
+//        
+//        System.out.println(p.extractData(data));
+//        System.out.println(p.extractData(data1));
+//        System.out.println(p.extractData(data2));
 //        
 //    }
-    
-
-    
-    
-    
 }

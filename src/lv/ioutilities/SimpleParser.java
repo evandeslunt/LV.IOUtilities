@@ -36,8 +36,12 @@ public class SimpleParser implements Parser{
     /**
      * Takes a line of a file and puts the line into a map, with the key as the
      * line number and the value as the text.
-     * @param text 
-     * @return 
+     * Note: no checks are done to verify the <code>text</code> input is not
+     * null or not empty. Null and empty Strings are placed into the Map.
+     * 
+     * @param text The text to place into the Map.
+     * @return A Map containing the text as the value and the current line
+     * number as the key.
      */
     @Override
     public Map<String,String> parse(String text) {
@@ -48,9 +52,20 @@ public class SimpleParser implements Parser{
         return map;
     }
 
+    /**
+     * Takes a map containing a single line of text data, and returns it as a
+     * String.
+     * @param data - The map containing the information to be returned.
+     * @return The String representation of the information in the Map.
+     */
     @Override
-    public String encode(Map data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String extractData(Map<String,String> data) {
+        String lineValue = "";
+        for(String k : data.keySet()){
+            lineValue += data.get(k);
+        }
+        
+        return lineValue;
     }
     
     public final void setCurrLineNum(int lineNum){

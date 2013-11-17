@@ -3,12 +3,14 @@ package lv.ioutilities;
 
 import java.util.*;
 
+/*** DEPRICATED ***/
+
 /**
  * The simplest possible parser -- handles files that have one piece of data
  * per line.
  * @author Liz Ife Van Deslunt
  */
-public class PlainTextParser implements Parser{
+public class PlainTextParser {
     public static final Integer INIT_LINE_NUM = 1;
     private static Integer currLineNum;
     private static Integer userSpecInitLineNum;
