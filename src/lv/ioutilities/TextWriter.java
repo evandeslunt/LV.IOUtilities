@@ -51,14 +51,13 @@ public class TextWriter implements FWriter{
      * Parser to translate the data.
      * 
      * @param path - The path of the file to write to.
-     * @param data - The data to add to the file. Each item of the list
-     * should correspond to one line in the file. 
+     * @param data - The data to add to the file. 
      * @param append - Whether the contents of the file should be 
      * overwritten (false), or appended to (true)
      * @throws IOException if there is a problem accessing or writing the file.
      */
     @Override
-    public final void write(Path path, Map<String,String> data, boolean append) throws IOException{
+    public final void writeLine(Path path, Map<String,String> data, boolean append) throws IOException{
         ValidationUtilities.validateFilePath(path);
         BufferedWriter out = null;
         

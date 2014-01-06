@@ -22,7 +22,7 @@ public interface FWriter {
      * overwritten (false), or appended to (true)
      * @throws IOException 
      */
-    public void write(Path path, Map<String,String> data, boolean append) throws IOException;
+    public void writeLine(Path path, Map<String,String> data, boolean append) throws IOException;
     
     /**
      * Sets the Parser to the given Parser.

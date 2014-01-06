@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,6 @@ public class FileService {
         //TODO: read this from config file.
         writer = ExternalSpecFactory.getWriter();
         reader = ExternalSpecFactory.getReader();
-        System.out.println(" my reader is " + reader.toString( ) + " my writer is " + writer.toString());
     }
     
     /**
@@ -93,10 +93,10 @@ public class FileService {
      * @throws NullPointerException if <code>path</code> or <code>data<code> is null.
      * @throws IllegalArgumentException if the path is an empty String.
      */
-     public final void write(Path path, Map<String,String> data, boolean append) throws IOException{
+     public final void writeLine(Path path, Map<String,String> data, boolean append) throws IOException{
          ValidationUtilities.validateFilePath(path);
          ValidationUtilities.validateObject(data, NULL_DATA);
-         writer.write(path, data, append);
+         writer.writeLine(path, data, append);
      }
      
      /**
@@ -157,6 +157,16 @@ public class FileService {
      public static void main(String args[]) throws Exception{
          
          FileService fs = new FileService();
+         Path myTestFile = Paths.get("src/testData.txt");
+         System.out.println(fs.read(myTestFile));
+         Map<String,String> data = new LinkedHashMap<String,String>();
+         data.put("1", "The Tao that can be known");
+         
+         fs.writeLine(myTestFile, data, true);
+         data.put("1", "Is not the eternal Tao.");
+         fs.writeLine(myTestFile, data, true);
+         System.out.println(fs.read(myTestFile));
+         
          
          
      }

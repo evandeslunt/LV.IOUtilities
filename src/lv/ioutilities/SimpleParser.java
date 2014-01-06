@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class SimpleParser implements Parser{
     private static final Integer DEFAULT_INIT_LINE_NUM = 1;
+    private static final String NEW_LINE = "\n";
     
     private Integer initialLineNum = DEFAULT_INIT_LINE_NUM;
     private Integer currLineNum;
